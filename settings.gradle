@@ -3,5 +3,10 @@ include 'MPChartLib'
 include 'MPChartExample'
 //include ':MPChartLib-Realm'
 //project(':MPChartLib-Realm').projectDir = new File('../MPAndroidChart-Realm/MPChartLib-Realm')
+include ':MPChartLib'
+include ':MPChartExample'
+project(':MPAndroidChart/MPChartLib').projectDir = new File(rootDir, 'MPAndroidChart/MPChartLib/')
+project(':MPAndroidChart/MPChartExample').projectDir = new File(rootDir, 'MPAndroidChart/MPChartExample/')
+
 
 

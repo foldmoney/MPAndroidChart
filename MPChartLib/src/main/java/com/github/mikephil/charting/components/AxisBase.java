@@ -6,6 +6,7 @@ import android.graphics.DashPathEffect;
 import android.util.Log;
 
 import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IAxisStyleFormatter;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.utils.Utils;
 
@@ -23,6 +24,8 @@ public abstract class AxisBase extends ComponentBase {
      * custom formatter that is used instead of the auto-formatter if set
      */
     protected IAxisValueFormatter mAxisValueFormatter;
+
+    protected IAxisStyleFormatter mAxisLabelStyleFormatter;
 
     private int mGridColor = Color.GRAY;
 
@@ -552,6 +555,18 @@ public abstract class AxisBase extends ComponentBase {
             mAxisValueFormatter = new DefaultAxisValueFormatter(mDecimals);
 
         return mAxisValueFormatter;
+    }
+
+
+    public void setAxisLabelStyleFormatter(IAxisStyleFormatter f) {
+        mAxisLabelStyleFormatter = f;
+    }
+
+    public IAxisStyleFormatter getAxisLabelStyleFormatter() {
+        // return null if not set
+        if(mAxisLabelStyleFormatter == null)
+            return null;
+        return mAxisLabelStyleFormatter;
     }
 
     /**
