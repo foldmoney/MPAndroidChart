@@ -7,10 +7,12 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.XAxis.XAxisPosition;
+import com.github.mikephil.charting.formatter.IAxisStyleFormatter;
 import com.github.mikephil.charting.utils.FSize;
 import com.github.mikephil.charting.utils.MPPointD;
 import com.github.mikephil.charting.utils.MPPointF;
@@ -203,6 +205,23 @@ public class XAxisRenderer extends AxisRenderer {
             if (mViewPortHandler.isInBoundsX(x)) {
 
                 String label = mXAxis.getValueFormatter().getFormattedValue(mXAxis.mEntries[i / 2], mXAxis);
+
+                // get the custom axis label style formatter if set
+                IAxisStyleFormatter axisLabelStyleFormatter = mXAxis.getAxisLabelStyleFormatter();
+
+                if(axisLabelStyleFormatter != null) {
+                    // get label Text Style
+                    Typeface tf = axisLabelStyleFormatter.getTypefaceForAxisValue( mXAxis.mEntries[i / 2], mXAxis);
+                    if (tf != null) {
+                        mAxisLabelPaint.setTypeface(tf);
+                    }
+
+                    // get label text color
+                    int color = axisLabelStyleFormatter.getTextColorForAxisValue( mXAxis.mEntries[i / 2], mXAxis);
+                    if (color != 0) {
+                        mAxisLabelPaint.setColor(color);
+                    }
+                }
 
                 if (mXAxis.isAvoidFirstLastClippingEnabled()) {
 
