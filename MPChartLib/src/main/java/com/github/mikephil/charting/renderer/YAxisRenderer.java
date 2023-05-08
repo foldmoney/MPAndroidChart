@@ -24,6 +24,8 @@ public class YAxisRenderer extends AxisRenderer {
 
     protected Paint mZeroLinePaint;
 
+    protected Paint mCenterLinePaint;
+
     public YAxisRenderer(ViewPortHandler viewPortHandler, YAxis yAxis, Transformer trans) {
         super(viewPortHandler, trans, yAxis);
 
@@ -38,6 +40,11 @@ public class YAxisRenderer extends AxisRenderer {
             mZeroLinePaint.setColor(Color.GRAY);
             mZeroLinePaint.setStrokeWidth(1f);
             mZeroLinePaint.setStyle(Paint.Style.STROKE);
+
+            mCenterLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            mCenterLinePaint.setColor(Color.GRAY);
+            mCenterLinePaint.setStrokeWidth(1f);
+            mCenterLinePaint.setStyle(Paint.Style.STROKE);
         }
     }
 
@@ -167,6 +174,10 @@ public class YAxisRenderer extends AxisRenderer {
 
         if (mYAxis.isDrawZeroLineEnabled()) {
             drawZeroLine(c);
+        }
+
+        if(mYAxis.isDrawStaticCenterVerticalLineEnabled()) {
+            drawCenteredHighlightLine(c);
         }
     }
 
@@ -348,5 +359,15 @@ public class YAxisRenderer extends AxisRenderer {
 
             c.restoreToCount(clipRestoreCount);
         }
+    }
+
+    public void drawCenteredHighlightLine(Canvas c) {
+        // change paint configuration to values from yAxis
+        mCenterLinePaint.setColor(mYAxis.getStaticCenterVerticalLineColor());
+        mCenterLinePaint.setStrokeWidth(mYAxis.getStaticCenterVerticalLineWidth());
+        // draw a vertical line at the center of the screen
+        c.drawLine(mViewPortHandler.getChartWidth() / 2f, mViewPortHandler.offsetTop(),
+                mViewPortHandler.getChartWidth() / 2f, mViewPortHandler.getChartHeight() - mViewPortHandler.offsetBottom(),
+                mCenterLinePaint);
     }
 }
