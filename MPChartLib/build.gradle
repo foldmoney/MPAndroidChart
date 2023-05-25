@@ -1,15 +1,12 @@
 apply plugin: 'com.android.library'
 
-group='com.github.philjay'
+group = 'com.github.philjay'
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
     defaultConfig {
+        compileSdk 33
         minSdkVersion 14
-        targetSdkVersion 28
-        versionCode 3
-        versionName '3.1.0'
+        targetSdkVersion 33
     }
     buildTypes {
         release {
@@ -20,27 +17,28 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true // this prevents "not mocked" error
     }
+    namespace 'com.github.mikephil.charting'
 }
 
 dependencies {
-    implementation 'androidx.annotation:annotation:1.0.0'
-    testImplementation 'junit:junit:4.12'
+    implementation 'androidx.annotation:annotation:1.5.0'
+    testImplementation 'junit:junit:4.13.2'
 }
 
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
+    archiveClassifier.set("sources")
 }
 
 task javadoc(type: Javadoc) {
     options.charSet = 'UTF-8'
-    failOnError  false
+    failOnError false
     source = android.sourceSets.main.java.sourceFiles
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
+    archiveClassifier.set('javadoc')
     from javadoc.destinationDir
 }
 
