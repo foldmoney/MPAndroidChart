@@ -188,7 +188,8 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                         boolean shouldPan = !mChart.isFullyZoomedOut() ||
                                 !mChart.hasNoDragOffset();
 
-                        if (shouldPan) {
+                        if (shouldPan && mLastGesture != ChartGesture.LONG_PRESS
+                                && mLastHighlighted == null) {
 
                             float distanceX = Math.abs(event.getX() - mTouchStartPoint.x);
                             float distanceY = Math.abs(event.getY() - mTouchStartPoint.y);
@@ -203,7 +204,8 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
 
                         } else {
 
-                            if (mChart.isHighlightPerDragEnabled()) {
+                            if (mChart.isHighlightPerDragEnabled()
+                                    && (mLastGesture == ChartGesture.LONG_PRESS || mLastHighlighted != null)) {
                                 mLastGesture = ChartGesture.DRAG;
 
                                 if (mChart.isHighlightPerDragEnabled())
