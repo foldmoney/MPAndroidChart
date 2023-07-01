@@ -75,6 +75,11 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
     private float mMinScalePointerDistance;
 
     /**
+     * Only highlight after long press
+     */
+    private boolean mHighlightOnLongPress = false;
+
+    /**
      * Constructor with initialization parameters.
      *
      * @param chart               instance of the chart
@@ -185,11 +190,10 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
 
                     if (mChart.isDragEnabled()) {
 
-                        boolean shouldPan = !mChart.isFullyZoomedOut() ||
-                                !mChart.hasNoDragOffset();
+                        boolean shouldPan = (!mChart.isFullyZoomedOut() || !mChart.hasNoDragOffset())
+                                && (!mHighlightOnLongPress || (mLastGesture != ChartGesture.LONG_PRESS && mLastHighlighted == null));
 
-                        if (shouldPan && mLastGesture != ChartGesture.LONG_PRESS
-                                && mLastHighlighted == null) {
+                        if (shouldPan) {
 
                             float distanceX = Math.abs(event.getX() - mTouchStartPoint.x);
                             float distanceY = Math.abs(event.getY() - mTouchStartPoint.y);
@@ -203,13 +207,13 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                             }
 
                         } else {
+                            if (mChart.isHighlightPerDragEnabled()) {
+                                if (!mHighlightOnLongPress || mLastGesture == ChartGesture.LONG_PRESS || mLastHighlighted != null) {
+                                    mLastGesture = ChartGesture.DRAG;
 
-                            if (mChart.isHighlightPerDragEnabled()
-                                    && (mLastGesture == ChartGesture.LONG_PRESS || mLastHighlighted != null)) {
-                                mLastGesture = ChartGesture.DRAG;
-
-                                if (mChart.isHighlightPerDragEnabled())
-                                    performHighlightDrag(event);
+                                    if (mChart.isHighlightPerDragEnabled())
+                                        performHighlightDrag(event);
+                                }
                             }
                         }
 
@@ -286,6 +290,10 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
         mMatrix = mChart.getViewPortHandler().refresh(mMatrix, mChart, true);
 
         return true; // indicate event was handled
+    }
+
+    public void setHighlightOnLongPress(boolean enabled) {
+        mHighlightOnLongPress = enabled;
     }
 
     /**
