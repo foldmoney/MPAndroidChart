@@ -73,4 +73,11 @@ public interface OnChartGestureListener {
      * @param dY translation distance on the y-axis
      */
     void onChartTranslate(MotionEvent me, float dX, float dY);
+
+    /**
+     * Callbacks when a zoom gesture on the chart has been detected.
+     *
+     * @param zoomingOut Zoom direction, outwards or inwards.
+     */
+    void onChartZoom(Boolean zoomingOut);
 }

@@ -75,6 +75,11 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
     private float mMinScalePointerDistance;
 
     /**
+     * Only highlight after long press
+     */
+    private boolean mHighlightOnLongPress = false;
+
+    /**
      * Constructor with initialization parameters.
      *
      * @param chart               instance of the chart
@@ -177,9 +182,7 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                 } else if (mTouchMode == X_ZOOM || mTouchMode == Y_ZOOM || mTouchMode == PINCH_ZOOM) {
 
                     mChart.disableScroll();
-
-                    if (mChart.isScaleXEnabled() || mChart.isScaleYEnabled())
-                        performZoom(event);
+                    performZoom(event);
 
                 } else if (mTouchMode == NONE
                         && Math.abs(distance(event.getX(), mTouchStartPoint.x, event.getY(),
@@ -187,8 +190,8 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
 
                     if (mChart.isDragEnabled()) {
 
-                        boolean shouldPan = !mChart.isFullyZoomedOut() ||
-                                !mChart.hasNoDragOffset();
+                        boolean shouldPan = (!mChart.isFullyZoomedOut() || !mChart.hasNoDragOffset())
+                                && (!mHighlightOnLongPress || (mLastGesture != ChartGesture.LONG_PRESS && mLastHighlighted == null));
 
                         if (shouldPan) {
 
@@ -204,12 +207,13 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                             }
 
                         } else {
-
                             if (mChart.isHighlightPerDragEnabled()) {
-                                mLastGesture = ChartGesture.DRAG;
+                                if (!mHighlightOnLongPress || mLastGesture == ChartGesture.LONG_PRESS || mLastHighlighted != null) {
+                                    mLastGesture = ChartGesture.DRAG;
 
-                                if (mChart.isHighlightPerDragEnabled())
-                                    performHighlightDrag(event);
+                                    if (mChart.isHighlightPerDragEnabled())
+                                        performHighlightDrag(event);
+                                }
                             }
                         }
 
@@ -286,6 +290,10 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
         mMatrix = mChart.getViewPortHandler().refresh(mMatrix, mChart, true);
 
         return true; // indicate event was handled
+    }
+
+    public void setHighlightOnLongPress(boolean enabled) {
+        mHighlightOnLongPress = enabled;
     }
 
     /**
@@ -365,6 +373,8 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                     float scale = totalDist / mSavedDist; // total scale
 
                     boolean isZoomingOut = (scale < 1);
+                    if (l != null)
+                        l.onChartZoom(isZoomingOut);
 
                     boolean canZoomMoreX = isZoomingOut ?
                             h.canZoomOutMoreX() :
@@ -377,13 +387,15 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                     float scaleX = (mChart.isScaleXEnabled()) ? scale : 1f;
                     float scaleY = (mChart.isScaleYEnabled()) ? scale : 1f;
 
-                    if (canZoomMoreY || canZoomMoreX) {
+                    if (mChart.isScaleXEnabled() || mChart.isScaleYEnabled()) {
+                        if (canZoomMoreY || canZoomMoreX) {
 
-                        mMatrix.set(mSavedMatrix);
-                        mMatrix.postScale(scaleX, scaleY, t.x, t.y);
+                            mMatrix.set(mSavedMatrix);
+                            mMatrix.postScale(scaleX, scaleY, t.x, t.y);
 
-                        if (l != null)
-                            l.onChartScale(event, scaleX, scaleY);
+                            if (l != null)
+                                l.onChartScale(event, scaleX, scaleY);
+                        }
                     }
 
                 } else if (mTouchMode == X_ZOOM && mChart.isScaleXEnabled()) {
