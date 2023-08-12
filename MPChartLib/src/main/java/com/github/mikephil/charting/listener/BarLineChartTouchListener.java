@@ -79,6 +79,8 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
      */
     private boolean mHighlightOnLongPress = false;
 
+    private int lastMotionEventAction = -1;
+
     /**
      * Constructor with initialization parameters.
      *
@@ -100,6 +102,7 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+        lastMotionEventAction = event.getAction();
 
         if (mVelocityTracker == null) {
             mVelocityTracker = VelocityTracker.obtain();
@@ -613,14 +616,16 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
 
     @Override
     public void onLongPress(MotionEvent e) {
+        if (lastMotionEventAction == MotionEvent.ACTION_DOWN) {
+            performHighlightDrag(e);
+            mLastGesture = ChartGesture.LONG_PRESS;
 
-        mLastGesture = ChartGesture.LONG_PRESS;
+            OnChartGestureListener l = mChart.getOnChartGestureListener();
 
-        OnChartGestureListener l = mChart.getOnChartGestureListener();
+            if (l != null) {
 
-        if (l != null) {
-
-            l.onChartLongPressed(e);
+                l.onChartLongPressed(e);
+            }
         }
     }
 
