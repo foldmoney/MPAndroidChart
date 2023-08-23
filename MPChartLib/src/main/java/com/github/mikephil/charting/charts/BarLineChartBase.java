@@ -100,6 +100,45 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
     protected boolean mClipValuesToContent = false;
 
+    /**
+     * flag that indicates if draw highlight point is enabled or not
+     */
+    protected boolean isDrawHighlightPoint = false;
+
+    /**
+     * the highlight point inner radius (px)
+     */
+    protected int mHighLightPointInnerRadius = 1;
+
+    /**
+     * the highlight point stroke width (px)
+     */
+    protected int mHighLightPointStrokeWidth = 1;
+
+    public boolean isDrawHighlightPoint() {
+        return isDrawHighlightPoint;
+    }
+
+    public void setDrawHighlightPoint(boolean drawHighlightPoint) {
+        isDrawHighlightPoint = drawHighlightPoint;
+    }
+
+    public int getHighLightPointInnerRadius() {
+        return mHighLightPointInnerRadius;
+    }
+
+    public void setHighLightPointInnerRadius(int mHighLightPointStrokeWidth) {
+        this.mHighLightPointInnerRadius = mHighLightPointStrokeWidth;
+    }
+
+    public int getHighLightPointStrokeWidth() {
+        return mHighLightPointStrokeWidth;
+    }
+
+    public void setHighLightPointStrokeWidth(int mHighLightPointStrokeWidth) {
+        this.mHighLightPointStrokeWidth = mHighLightPointStrokeWidth;
+    }
+
     protected boolean mClipDataToContent = true;
 
     /**
