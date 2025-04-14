@@ -3,8 +3,11 @@ package com.github.mikephil.charting.renderer;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.RectF;
+import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 
 import com.github.mikephil.charting.animation.ChartAnimator;
@@ -172,7 +175,32 @@ public class LineChartRenderer extends LineRadarRenderer {
             drawCubicFill(mBitmapCanvas, dataSet, cubicFillPath, trans, mXBounds);
         }
 
-        mRenderPaint.setColor(dataSet.getColor());
+        // Get the viewport bounds
+        RectF viewportRect = this.mViewPortHandler.getContentRect();
+
+        // Apply gradient only if enabled
+        if (dataSet.isGradientEnabled()) {
+            // Create a linear gradient from left to right of the viewport
+            // Left side at 0% alpha (0), middle at ~31% alpha (80), right side at 100% alpha
+            int baseColor = dataSet.getColor();
+            int leftColor = Color.argb(0, Color.red(baseColor), Color.green(baseColor), Color.blue(baseColor));
+            int leftColor2 = Color.argb(80, Color.red(baseColor), Color.green(baseColor), Color.blue(baseColor));
+            int rightColor = baseColor; // Already has full alpha
+
+            LinearGradient gradient = new LinearGradient(
+                    viewportRect.left, 0,
+                    viewportRect.right, 0,
+                    new int[]{leftColor, leftColor2, rightColor},
+                    null, // Default to equal distribution
+                    Shader.TileMode.CLAMP
+            );
+
+            mRenderPaint.setShader(gradient);
+        } else {
+            // Use solid color if gradient not enabled
+            mRenderPaint.setColor(dataSet.getColor());
+            mRenderPaint.setShader(null);
+        }
 
         mRenderPaint.setStyle(Paint.Style.STROKE);
 
@@ -591,8 +619,8 @@ public class LineChartRenderer extends LineRadarRenderer {
                         Utils.drawImage(
                                 c,
                                 icon,
-                                (int)(x + iconsOffset.x),
-                                (int)(y + iconsOffset.y),
+                                (int) (x + iconsOffset.x),
+                                (int) (y + iconsOffset.y),
                                 icon.getIntrinsicWidth(),
                                 icon.getIntrinsicHeight());
                     }

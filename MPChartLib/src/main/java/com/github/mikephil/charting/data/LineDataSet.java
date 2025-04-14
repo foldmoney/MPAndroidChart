@@ -23,6 +23,11 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
     private LineDataSet.Mode mMode = Mode.LINEAR;
 
     /**
+     * Is Gradient on the line enabled
+     */
+    private Boolean mIsGradientEnabled = false;
+
+    /**
      * List representing all colors that are used for the circles
      */
     private List<Integer> mCircleColors = null;
@@ -268,6 +273,11 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
         return mMode == Mode.STEPPED;
     }
 
+    @Override
+    public boolean isGradientEnabled (){
+        return mIsGradientEnabled;
+    }
+
     /** ALL CODE BELOW RELATED TO CIRCLE-COLORS */
 
     /**
@@ -406,6 +416,10 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
     @Override
     public IFillFormatter getFillFormatter() {
         return mFillFormatter;
+    }
+
+    public void setIsGradientEnabled(Boolean mIsGradientEnabled) {
+        this.mIsGradientEnabled = mIsGradientEnabled;
     }
 
     public enum Mode {
