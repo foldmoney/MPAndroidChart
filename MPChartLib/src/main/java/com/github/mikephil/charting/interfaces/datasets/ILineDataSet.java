@@ -95,6 +95,12 @@ public interface ILineDataSet extends ILineRadarDataSet<Entry> {
     boolean isDashedLineEnabled();
 
     /**
+     *
+     * @return True if the gradient is enabled, false if not.
+     */
+    boolean isGradientEnabled();
+
+    /**
      * Returns the IFillFormatter that is set for this DataSet.
      *
      * @return
