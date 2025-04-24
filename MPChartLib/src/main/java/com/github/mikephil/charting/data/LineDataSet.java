@@ -1,4 +1,3 @@
-
 package com.github.mikephil.charting.data;
 
 import android.content.Context;
@@ -26,6 +25,16 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
      * Is Gradient on the line enabled
      */
     private Boolean mIsGradientEnabled = false;
+
+    /**
+     * Custom colors for the gradient if enabled
+     */
+    private int[] mGradientColors = null;
+
+    /**
+     * Custom positions for gradient colors
+     */
+    private float[] mGradientPositions = null;
 
     /**
      * List representing all colors that are used for the circles
@@ -110,6 +119,9 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
         lineDataSet.mDrawCircles = mDrawCircleHole;
         lineDataSet.mFillFormatter = mFillFormatter;
         lineDataSet.mMode = mMode;
+        lineDataSet.mIsGradientEnabled = mIsGradientEnabled;
+        lineDataSet.mGradientColors = mGradientColors;
+        lineDataSet.mGradientPositions = mGradientPositions;
     }
 
     /**
@@ -274,8 +286,42 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
     }
 
     @Override
-    public boolean isGradientEnabled (){
+    public boolean isGradientEnabled() {
         return mIsGradientEnabled;
+    }
+
+    /**
+     * Sets custom colors for gradient.
+     * If not set, default gradient will be used
+     * @param colors Array of colors for gradient
+     */
+    public void setGradientColors(int[] colors) {
+        this.mGradientColors = colors;
+    }
+
+    /**
+     * @return Custom gradient colors or null if not set
+     */
+    @Override
+    public int[] getGradientColors() {
+        return mGradientColors;
+    }
+
+    /**
+     * Sets custom positions for gradient colors.
+     * Values should be in range 0.0 - 1.0
+     * @param positions Array of positions for gradient colors
+     */
+    public void setGradientPositions(float[] positions) {
+        this.mGradientPositions = positions;
+    }
+
+    /**
+     * @return Custom gradient positions or null if not set
+     */
+    @Override
+    public float[] getGradientPositions() {
+        return mGradientPositions;
     }
 
     /** ALL CODE BELOW RELATED TO CIRCLE-COLORS */
