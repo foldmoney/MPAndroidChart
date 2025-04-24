@@ -101,6 +101,20 @@ public interface ILineDataSet extends ILineRadarDataSet<Entry> {
     boolean isGradientEnabled();
 
     /**
+     * Returns custom gradient colors if set
+     *
+     * @return array of colors for gradient or null if not set
+     */
+    int[] getGradientColors();
+
+    /**
+     * Returns custom gradient positions if set
+     *
+     * @return array of positions for gradient colors or null if not set
+     */
+    float[] getGradientPositions();
+
+    /**
      * Returns the IFillFormatter that is set for this DataSet.
      *
      * @return
